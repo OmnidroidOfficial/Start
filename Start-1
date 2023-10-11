@@ -14,9 +14,9 @@
         <option value="@country.IDName1">@country.IDLabel1</option>
     }
 
-    </select>
-    <br />
-<p>@SelectedCountryID is the country matching your selection.</p>
+</select>
+<br />
+<p>@SelectedCountryID is the 3-letter abbreviation of the country matching your selection.</p>
 
 <button @onclick=@NxtOne>Next</button>
 
@@ -50,5 +50,3 @@
         UriHelper2.NavigateTo("start_2");
     }
 }
-
-    
