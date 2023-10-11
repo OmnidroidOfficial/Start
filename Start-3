@@ -1,0 +1,9 @@
+@page "/start_3"
+
+<PageTitle>Start - Echelon Host</PageTitle>
+<h1>Echelon Host</h1>
+<p hidden="@fourUnhidden"></p>
+<p hidden="@fiveUnhidden"></p>
+@code {
+
+}
