@@ -11,7 +11,7 @@
 <br/>
 <p hidden="@oneUnhidden">Please select your gender.</p>
 <select class="form-control" @bind="@SelectedGenderID" hidden="@oneUnhidden">
-    @foreach (var gender in LisGenders)
+    @foreach (var gender in ListGenders)
     {
         <option value="@gender.IDName2">@gender.IDLabel2</option>
     }
