@@ -8,93 +8,87 @@
 <h1>Adaptation of Language</h1>
 
 <p hidden="@oneUnhidden">Omnidroid aspires to use language that is adapted to your exact preferences.</p>
-<br/>
+<br />
 <p hidden="@oneUnhidden">Please select your gender.</p>
 <select class="form-control" @bind="@SelectedGenderID" hidden="@oneUnhidden">
     @foreach (var gender in ListGenders)
     {
-        <option value="@gender.IDName2">@gender.IDLabel2</option>
+        <option value="@gender.IDRefGen2">@gender.IDPrintName2</option>
     }
 </select>
-<p>Your selection is: @PrintSelectedGender.</p>
+<p hidden="@oneUnhidden">Your current reference: @SelectedGenderID.</p>
 <button hidden="@oneUnhidden" @onclick="@HideOne">Next</button>
 <button hidden="@oneUnhidden" @onclick="@revOneNxt">Back</button>
 
 <p hidden="@twoUnhidden">In this section the primary terms that are used to address you are configured.</p>
 <br/>
+<input hidden="@twoUnhidden" @bind="InputLastName" @bind:event="oninput" placeholder="Last Name" />
 <p hidden="@twoUnhidden">Please enter your last name and follow the instructions below.</p>
-<InputText hidden="@twoUnhidden" @bind="@InputLastName" placeholder="Last Name" @bind-event="oninput"></InputText>
-<br/>
-<EditForm Model="@Model1" hidden="@twoUnhidden" OnSubmit="@SubmitModel1">
-    <p>Please select the options that suit your credentials.</p>
-    <div style="margin-bottom:5px">
+<EditForm Model="@Model1" OnSubmit="@SubmitModel1" hidden="@twoUnhidden">
+    <p>Select the options that suit your credentials.</p>
+    <div>
         <label>
-            <InputCheckbox @bind-Value="Model1!.IfModuleMarried"/>
+            <InputCheckbox @bind-Value="Model1!.IfModuleMarried" />
             "I am Married."
         </label>
     </div>
     <div>
         <label>
-            <InputCheckbox @bind-Value="Model1!.IfModuleTitledProfession"/>
+            <InputCheckbox @bind-Value="Model1!.IfModuleTitledProfession" />
             "My Title(s) is (are) Related to My Profession."
         </label>
     </div>
     <div>
         <label>
-            <InputCheckbox @bind-Value="Model1!.IfModuleDescent"/>
+            <InputCheckbox @bind-Value="Model1!.IfModuleDescent" />
             "My Title(s) is (are) Related to My Descent."
         </label>
     </div>
     <p hidden="@oneNote">Please make sure that the last name that you have entered here is your maiden name.</p>
-    <p hidden="@twoUnhidden">@SummaryModel1</p>
+
     <button type="submit">Update</button>
 </EditForm>
+<p hidden="@twoUnhidden">"@SummaryModel1"</p>
+<br/>
 <button hidden="@twoUnhidden" @onclick="@HideTwo">Next</button>
 <button hidden="@twoUnhidden" @onclick="@revTwoNxt">Back</button>
 
-<p hidden="@threeUnhidden">In this section, customize the structure of your legal name.</p>
-<p hidden="@revItemViewOne">There is nothing for you to declare in this section.</p>
-<EditForm Model="@Model2" hidden="@itemViewOne" OnSubmit="SubmitModel2">
-    <div style="margin-bottom:5px" hidden="@itemViewTwo">
+<p hidden="@threeUnhidden">In this section, the basic structure of your legal name is customized. (Excluding the definition of 'other'.)</p>
+<p hidden="@revItemViewOne, @threeUnhidden">There is nothing for you to declare in this section.</p>
+
+<div style="margin-bottom:5px" hidden="@threeUnhidden">
+    <label>
+        Enter a custom prefix.
+        <input @bind="@InputTerms1Prefix" @bind:event="oninput" placeholder="Prefix" />
+    </label>
+</div>
+<div style="margin-bottom:5px" hidden="@threeUnhidden">
+    <label>
+        Enter a custom suffix.
+        <input @bind="@InputTerms1Suffix" @bind:event="oninput" placeholder="Suffix" />
+    </label>
+</div>
+<div style="margin-bottom:5px" hidden="@itemViewTwo">
         <label>
             Please enter the name that you have married.
-            <InputText hidden="@itemViewTwo" @bind="@NotMaidenName" placeholder="Married Name" @bind-event="oninput"/> 
+            <input @bind="@NotMaidenName" @bind:event="oninput" placeholder="Married Name" />
         </label>
     </div>
-    <div style="margin-bottom:5px">
-        <label>
-            Enter a custom prefix.
-            <InputText @bind="@InputTerms1Prefix" placeholder="Prefix" @bind-event="oninput"/> 
-        </label>
-    </div>
-    <div style="margin-bottom:5px">
-        <label>
-            Enter a custom suffix.
-            <InputText @bind="@InputTerms1Suffix" placeholder="Suffix" @bind-event="oninput"/> 
-        </label>
-    </div>
-    <p>Greetings, @InputTerms1Prefix @str1SummaryModel1 @InputLastName@SuffixNotMaidenName @InputTerms1Suffix. Welcome to Omnidroid.'</p>
-    <button type="submit">Update</button>
-</EditForm>
+<p>Welcome to Omnidroid, @InputTerms1Prefix @SelectedGenderID @InputLastName@SuffixNotMaidenName @InputTerms1Suffix.</p>
 <button hidden="@threeUnhidden" @onclick="@HideThree">Next</button>
 <button hidden="@threeUnhidden" @onclick="@revThreeNxt">Back</button>
 
-@code {
-    // set gender, get in summary
-    // 3; names
-    // prefix, suffix
-    // hide oneNote in HideTwo twoUnhidden
-    // public class Terms1 default prefix suffix 
 
+@code{
     string? selectedGenderID;
 
     string SelectedGenderID
     {
         get => selectedGenderID ?? "";
-        set { selectedGederID = value; }
+        set { selectedGenderID = value; }
     }
 
-    List<Gender> ListGenders = new List<Gender>() { new Gender("female", "Miss", "Female", "Female"), new Gender("male", "Mister", "Male", "Male"), new Gender("other", "(To be further specified)", "Other", "Other: Further details follow during configuration.") };
+    List<Gender> ListGenders = new List<Gender>() { new Gender("female", "Miss", "Female", "Female"), new Gender("male", "Mister", "Male", "Male"), new Gender("other", "(To be further specified)", "Other", "Other: Further details follow during advanced configuration.") };
 
     public class Gender
     {
@@ -106,28 +100,20 @@
             IDPrintName2 = id2_name_forprint;
         }
 
-        public string IDLabel2 { get; set; }
-        public string IDRefGen2 { get; set; }
-        public string IDName2 { get; set; }
-        public string IDPrintName2 { get; set; }
+        public string? IDLabel2 { get; set; }
+        public string? IDRefGen2 { get; set; }
+        public string? IDName2 { get; set; }
+        public string? IDPrintName2 { get; set; }
     }
 
-    string? printSelectedGender;
-
-    string PrintSelectedGender
-    {
-        get => SelectedGenderID ?? "";
-        set { printSelectedGender = IDPrintName2; }
-    }
-
-    static public bool oneUnhidden { get; set; } = false;
-    void revOneNxt()
+    private static bool oneUnhidden { get; set; } = false;
+    private void revOneNxt()
     {
         UriHelper3.NavigateTo("introduction_1");
     }
 
-    static public bool twoUnhidden { get; set; } = true;
-    void HideOne()
+    private static bool twoUnhidden { get; set; } = true;
+    private void HideOne()
     {
         _local.SetItemAsStringAsync("SelectedGenderID_local", SelectedGenderID);
         oneUnhidden = !oneUnhidden;
@@ -135,105 +121,95 @@
         twoUnhidden = !twoUnhidden;
     }
 
-    public Section1? Model1 { get; set; }
+    private bool oneNote { get; set; } = true;
 
-    public class Section1
+    private void GetGender()
     {
-        public bool? IfModuleMarried { get; set; }
-        public bool? IfModuleDescent { get; set; }
-        public bool? IfModuleTitledProfession { get; set; }
-    }
-
-    static public string? InputLastName { get; set; }
-
-    public bool oneNote { get; set; } = true;
-
-    void GetGender()
-    {
-        if (SelectedGenderID == "female")
+        if (SelectedGenderID == "Miss")
         {
             oneNote = false;
         }
     }
 
-    public void SubmitModel1()
+    private string? InputLastName { get; set; }
+
+    public class Section1
     {
-    public bool ifModuleDescent_local = IfModuleDescent;
-    public bool ifModuleTitledProfession_local = IfModuleTitledProfession;
-    public bool ifModuleMarried_local = IfModuleMarried;
-    public string str1SummaryModel1
-    public string str2SummaryModel1;
-    public string str3SummaryModel1;
-    public string str4SummaryModel1;
-
-    void GetSummaryModel1()
-    {
-        void GetModel1Str1(string str1SummaryModel1)
-        {
-            str1SummaryModel1 = IDRefGen2;
-        }
-
-        void GetModel1Str2(string str2SummaryModel1)
-        {
-            if (ifModuleMarried_local == true)
-            {
-                str2SummaryModel1 = "is married,";
-            }
-            else
-            {
-                str2SummaryModel1 = "is not married,";
-            }
-            return str2SummaryModel1;
-        }
-
-        void GetModel1Str3(string str3SummaryModel1)
-        {
-            if (ifModuleTitledProfession_local == true)
-            {
-                str3SummaryModel1 = "uses a title for profession,";
-            }
-            else
-            {
-                str3SummaryModel1 = "does not use a title for profession,";
-            }
-            return str3SummaryModel1;
-        }
-
-        void GetModel1Str4(string str4SummaryModel1)
-        {
-            if (ifModuleDescent_local == true)
-            {
-                str4SummaryModel1 = "uses a title for descent.";
-            }
-            else
-            {
-                str4SummaryModel1 = "does not use a title for descent.";
-            }
-            return str4SummaryModel1;
-        }
-
-        GetModel1Str1(str1SummaryModel1);
-        GetModel1Str2(str2SummaryModel1);
-        GetModel1Str3(str3SummaryModel1);
-        GetModel1Str4(str4SummaryModel1);
+        public bool IfModuleMarried { get; set; }
+        public bool IfModuleDescent { get; set; }
+        public bool IfModuleTitledProfession { get; set; }
     }
 
-        string? summaryModel1;
+    public Section1? Model1 { get; set; }
 
-        string SummaryModel1
+    protected override void OnInitialized() => Model1 ??= new();
+
+    public string? SummaryModel1 { get; set; }
+
+    static public string? ifModuleDescent_localstring;
+    static public string? ifModuleTitledProfession_localstring;
+    static public string? ifModuleMarried_localstring;
+
+    static public bool? ifModuleDescent_local;
+    static public bool? ifModuleTitledProfession_local;
+    static public bool? ifModuleMarried_local;
+
+    public string? str1SummaryModel1;
+    public string? str2SummaryModel1;
+    public string? str3SummaryModel1;
+
+    public void GetSummaryModel1()
+    {
+        if (ifModuleMarried_local == true)
         {
-        get => summaryModel1 ?? "";
-        set { summaryModel1 = str1SummaryModel1 + InputLastName + str2SummaryModel1 + str3SummaryModel1 + "and" + str4SumaryModel1; }
+            str1SummaryModel1 = "is married, ";
+        }
+        else
+        {
+            str1SummaryModel1 = "is not married, ";
+        }
+
+        if (ifModuleTitledProfession_local == true)
+        {
+            str2SummaryModel1 = "uses a professional title ";
+        }
+        else
+        {
+            str2SummaryModel1 = "does not use a professional title ";
+        }
+
+        if (ifModuleDescent_local == true)
+        {
+            str3SummaryModel1 = "and uses a title based on descent";
+        }
+        else
+        {
+            str3SummaryModel1 = "and does not use a title based on descent";
         }
     }
-    
+
+    void SubmitModel1()
+    {
+        ifModuleDescent_localstring = Model1?.IfModuleDescent.ToString();
+        ifModuleTitledProfession_localstring = Model1?.IfModuleTitledProfession.ToString();
+        ifModuleMarried_localstring = Model1?.IfModuleMarried.ToString();
+
+        ifModuleDescent_local = Convert.ToBoolean(ifModuleDescent_localstring);
+        ifModuleTitledProfession_local = Convert.ToBoolean(ifModuleTitledProfession_localstring);
+        ifModuleMarried_local = Convert.ToBoolean(ifModuleMarried_localstring);
+
+        GetSummaryModel1();
+
+        SummaryModel1 = SelectedGenderID + " " + InputLastName + " " + str1SummaryModel1 + " " + str2SummaryModel1 + " " + str3SummaryModel1 + ".";
+    }
+
     void revTwoNxt()
     {
         oneUnhidden = !oneUnhidden;
         twoUnhidden = !twoUnhidden;
     }
-    
-    static public bool threeUnhidden { get; set; } = true;
+
+    static private bool threeUnhidden { get; set; } = true;
 
     void HideTwo()
     {
@@ -242,49 +218,58 @@
         _local.SetItemAsync("ifModuleTitledProfession_local", ifModuleTitledProfession_local);
         _local.SetItemAsync("ifModuleMarried_local", ifModuleMarried_local);
         twoUnhidden = !twoUnhidden;
-    oneNote = true;
-    SetSuffixField();
+        oneNote = true;
+        SetSuffixField();
         threeUnhidden = !threeUnhidden;
     }
 
-    public bool itemViewOne { get; set; } = false;
-    public bool revItemViewOne { get; set; } = true;
+    public bool itemViewOne { get; set; } = true;
+    public bool itemViewTwo { get; set; } = true;
+    public bool revItemViewOne { get; set; } = false;
 
     void SetSuffixField()
     {
-    if (IfModuleDescent == false && IfModuleTitledProfession == false && IfModuleMarried == false)
+        if (ifModuleDescent_local == false && ifModuleTitledProfession_local == false && ifModuleMarried_local == false)
+        {
+            itemViewOne = true;
+            revItemViewOne = false;
+
+        }
+        else
+        {
+            itemViewOne = false;
+            revItemViewOne = true;
+        }
+        CheckMaidenName();
+    }
+
+    void CheckMaidenName()
     {
-    itemViewOne = true;
-    revItemViewOne = false;
+        if (SelectedGenderID == "Miss" && ifModuleMarried_local == true)
+        {
+            SelectedGenderID = "Mrs";
+            itemViewTwo = true;
+        }
 
     }
-    else
-    {
-    itemViewOne = false;
-    }
-    }
+    
+        static public string? InputTerms1Prefix {get; set;}
+        static public string? InputTerms1Suffix {get; set;}
+        static public string? NotMaidenName { get; set; }
 
-    static public string? NotMaidenName { get; set; }
-    static public string? InputTerms1Prefix { get; set; }
-    static public string? InputTerms1Suffix { get; set; }
-
-    public void SummaryModel2()
-    {
     public string SuffixNotMaidenName = "-" + NotMaidenName;
-    }
 
     void HideThree()
     {
-    _local.SetItemAsync("NotMaidenName_local", NotMaidenName);
-    _local.SetItemAsync("InputTerms1Prefix_local", InputTerms1Prefix);
-    _local.SetItemAsync("InputTerms1Suffix_local", InputTerms1Suffix);
-    UriHelper3.NavigateTo("start_3");
+        _local.SetItemAsync("NotMaidenName_local", NotMaidenName);
+        _local.SetItemAsync("InputTerms1Prefix_local", InputTerms1Prefix);
+        _local.SetItemAsync("InputTerms1Suffix_local", InputTerms1Suffix);
+        UriHelper3.NavigateTo("start_3");
     }
 
     void revThreeNxt()
-{
-    threeUnhidden = !threeUnhidden;
-    twoUnhidden = !twoUnhidden;
-}
-
+    {
+        threeUnhidden = !threeUnhidden;
+        twoUnhidden = !twoUnhidden;
+    }
 }
