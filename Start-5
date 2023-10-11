@@ -1,0 +1,7 @@
+@page "/start_5"
+
+<PageTitle>Start - Confirm Summary</PageTitle>
+<h1>Confirm Summary</h1>
+@code {
+
+}
