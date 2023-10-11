@@ -1,0 +1,54 @@
+@page "/start_1"
+@using Blazored.LocalStorage;
+@inject NavigationManager UriHelper2
+@inject ILocalStorageService _local
+
+<h1>Start</h1>
+
+<p>Configuration starts by selecting a country. Omnidroid ID's are organized on a per-country basis.</p>
+<label for="country">Please select your country from the list and click "next".</label>
+<select class="form-control" @bind="@SelectedCountryID">
+
+    @foreach (var country in ListCountries)
+    {
+        <option value="@country.IDName1">@country.IDLabel1</option>
+    }
+
+    </select>
+    <br />
+<p>@SelectedCountryID is the country matching your selection.</p>
+
+<button @onclick=@NxtOne>Next</button>
+
+@code {
+
+    string? selectedCountryID;
+
+    string SelectedCountryID
+    {
+        get => selectedCountryID ?? "";
+        set { selectedCountryID = value; }
+    }
+
+    List<Country> ListCountries = new List<Country>() { new Country("AFG", "Afghanistan"), new Country("ALB", "Albania") };
+
+    public class Country
+    {
+        public Country(string id1_name, string id1_label)
+        {
+            IDName1 = id1_name;
+            IDLabel1 = id1_label;
+        }
+
+        public string IDLabel1 { get; set; }
+        public string IDName1 { get; set; }
+    }
+
+    void NxtOne()
+    {
+        _local.SetItemAsStringAsync("SelectedCountryID_local", SelectedCountryID);
+        UriHelper2.NavigateTo("start_2");
+    }
+}
+
+    
