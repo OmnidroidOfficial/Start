@@ -1,0 +1,25 @@
+@page "/"
+@inject NavigationManager UriHelper
+
+<PageTitle>Index</PageTitle>
+
+<h1>Welcome to Omnidroid.</h1>
+
+<p>Omnidroid Start is used to create and configure new Omnidroid ID's.</p> 
+<br/>
+<p>Use the buttons below to start a new configuration, or proceed with your existing one.</p>
+
+<button @onclick=@NxtStart>Start</button>
+<button @onclick=@NxtContinue>Continue</button>
+
+@code {
+    void NxtStart()
+    {
+        UriHelper.NavigateTo("start_1");
+    }
+
+    void NxtContinue()
+    {
+        UriHelper.NavigateTo("continue_1");
+    }
+}
