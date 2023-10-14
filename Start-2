@@ -1,5 +1,6 @@
 @page "/start_2"
 @using Blazored.LocalStorage;
+@using Omnidroid_Start.Shared;
 @inject NavigationManager UriHelper3
 @inject ILocalStorageService _local
 
@@ -17,8 +18,8 @@
     }
 </select>
 <p hidden="@oneUnhidden">Your current reference: @SelectedGenderID.</p>
-<button hidden="@oneUnhidden" @onclick="@HideOne">Next</button>
-<button hidden="@oneUnhidden" @onclick="@revOneNxt">Back</button>
+<button class="btn-primary" hidden="@oneUnhidden" @onclick="@revNxtOne">Back</button>
+<button class="btn-primary" hidden="@oneUnhidden" @onclick="@HideOne">Next</button>
 
 <p hidden="@twoUnhidden">In this section the primary terms that are used to address you are configured.</p>
 <br/>
@@ -50,8 +51,8 @@
 </EditForm>
 <p hidden="@twoUnhidden">"@SummaryModel1"</p>
 <br/>
-<button hidden="@twoUnhidden" @onclick="@HideTwo">Next</button>
-<button hidden="@twoUnhidden" @onclick="@revTwoNxt">Back</button>
+<button class="btn-primary" hidden="@twoUnhidden" @onclick="@revNxtTwo">Back</button>
+<button class="btn-primary" hidden="@twoUnhidden" @onclick="@HideTwo">Next</button>
 
 <p hidden="@threeUnhidden">In this section, the basic structure of your legal name is customized. (Excluding the definition of 'other'.)</p>
 <p hidden="@revItemViewOne, @threeUnhidden">There is nothing for you to declare in this section.</p>
@@ -71,18 +72,18 @@
 <div style="margin-bottom:5px" hidden="@itemViewTwo">
         <label>
             Please enter the name that you have married.
-            <input @bind="@NotMaidenName" @bind:event="oninput" placeholder="Married Name" />
+            <input @bind="@SuffixNotMaidenName" hidden="@itemViewTwo" @bind:event="oninput" placeholder="MarriedName" />
         </label>
     </div>
 <p>Welcome to Omnidroid, @InputTerms1Prefix @SelectedGenderID @InputLastName@SuffixNotMaidenName @InputTerms1Suffix.</p>
-<button hidden="@threeUnhidden" @onclick="@HideThree">Next</button>
-<button hidden="@threeUnhidden" @onclick="@revThreeNxt">Back</button>
+<button class="btn-primary" hidden="@threeUnhidden" @onclick="@revNxtThree">Back</button>
+<button class="btn-primary" hidden="@threeUnhidden" @onclick="@HideThree">Next</button>
 
 
 @code{
     string? selectedGenderID;
 
-    string SelectedGenderID
+    public string SelectedGenderID
     {
         get => selectedGenderID ?? "";
         set { selectedGenderID = value; }
@@ -107,7 +108,7 @@
     }
 
     private static bool oneUnhidden { get; set; } = false;
-    private void revOneNxt()
+    private void revNxtOne()
     {
         UriHelper3.NavigateTo("introduction_1");
     }
@@ -131,7 +132,7 @@
         }
     }
 
-    private string? InputLastName { get; set; }
+    public string? InputLastName { get; set; }
 
     public class Section1
     {
@@ -203,7 +204,7 @@
         SummaryModel1 = SelectedGenderID + " " + InputLastName + " " + str1SummaryModel1 + " " + str2SummaryModel1 + " " + str3SummaryModel1 + ".";
     }
 
-    void revTwoNxt()
+    void revNxtTwo()
     {
         oneUnhidden = !oneUnhidden;
         twoUnhidden = !twoUnhidden;
@@ -248,26 +249,35 @@
         if (SelectedGenderID == "Miss" && ifModuleMarried_local == true)
         {
             SelectedGenderID = "Mrs";
+            itemViewTwo = false;
+        }
+        else if (SelectedGenderID != "Miss" && ifModuleMarried_local != true)
+        {
             itemViewTwo = true;
         }
-
     }
-    
-        static public string? InputTerms1Prefix {get; set;}
-        static public string? InputTerms1Suffix {get; set;}
-        static public string? NotMaidenName { get; set; }
 
-    public string SuffixNotMaidenName = "-" + NotMaidenName;
+    static public string? InputTerms1Prefix {get; set;}
+    static public string? InputTerms1Suffix {get; set;}
+    static public string? NotMaidenName { get; set; }
+
+    public string? SuffixNotMaidenName = "-" + NotMaidenName;
 
     void HideThree()
     {
         _local.SetItemAsync("NotMaidenName_local", NotMaidenName);
         _local.SetItemAsync("InputTerms1Prefix_local", InputTerms1Prefix);
         _local.SetItemAsync("InputTerms1Suffix_local", InputTerms1Suffix);
+        NxtTwo();
+    }
+
+    void NxtTwo()
+    {
+        PreSort.VarA = SelectedGenderID;
         UriHelper3.NavigateTo("start_3");
     }
 
-    void revThreeNxt()
+    void revNxtThree()
     {
         threeUnhidden = !threeUnhidden;
         twoUnhidden = !twoUnhidden;
