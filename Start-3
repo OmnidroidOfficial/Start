@@ -1,9 +1,71 @@
 @page "/start_3"
+@using Blazored.LocalStorage;
+@using Omnidroid_Start.Client;
+@using Omnidroid_Start.Shared;
+@inject NavigationManager UriHelper4
+@inject ILocalStorageService _local
 
 <PageTitle>Start - Echelon Host</PageTitle>
-<h1>Echelon Host</h1>
-<p hidden="@fourUnhidden"></p>
-<p hidden="@fiveUnhidden"></p>
-@code {
 
+<h1>Echelon Host</h1>
+
+<p>This section activates the Echelon Host configuration module. If not, the Echelon Member configuration module is activated.</p>
+<p>'Configure Module Host' is set to: @ModuleHost.</p>
+<p hidden="@hideMember">Please click 'Next'.</p>
+<p hidden="@hideHost">Please give your Echelon a name.</p>
+<input hidden="@hideHost" @bind="EchelonName" @bind:event="oninput" placeholder="Echelon Name" />
+<button class="btn-primary" onclick="@revNxtThree">Back</button>
+<button class="btn-primary" hidden="@hideMember" onclick="@NxtMemberThree">Next</button>
+<button class="btn-primary" hidden="@hideHost" onclick="@NxtHostThree">Next</button>
+
+@code {
+    static public bool hideMember { get; set; } = true;
+    static public bool hideHost { get; set; } = true;
+    static public bool? ModuleHost { get; set; }
+    static public string? EchelonName { get; set; }
+
+    protected override void OnInitialized()
+    {
+        ContextVariables.ContextA();
+        ModuleHost = PreSort.ReviewOne;
+        ReviewOneIni();
+    }
+
+    void ReviewOneIni()
+    {
+        SortClass.SortOne();
+        Three.SortReviewOne();
+
+        if (ModuleHost == true)
+        {
+            hideHost = false;
+            hideMember = true;
+        }
+        if (ModuleHost == false)
+        {
+            hideMember = false;
+            hideHost = true;
+        }
+
+    }
+
+    void revNxtThree()
+    {
+        UriHelper4.NavigateTo("start_2");
+    }
+
+    void NxtMemberThree()
+    {
+        PreSort.VarB = ModuleHost;
+        _local.SetItemAsStringAsync("ifModuleHost_local", ModuleHost.ToString());
+        UriHelper4.NavigateTo("start_4");
+    }
+
+    void NxtHostThree()
+    {
+        PreSort.VarB = ModuleHost;
+        _local.SetItemAsStringAsync("ifModuleHost_local", ModuleHost.ToString());
+        _local.SetItemAsStringAsync("EchelonName_local", EchelonName);
+        UriHelper4.NavigateTo("start_4");
+    }
 }
