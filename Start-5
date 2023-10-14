@@ -1,7 +1,19 @@
 @page "/start_5"
+@inject NavigationManager UriHelper6
 
-<PageTitle>Start - Confirm Summary</PageTitle>
-<h1>Confirm Summary</h1>
+<PageTitle>Start - Set Password</PageTitle>
+
+<h1>Set Password</h1>
+<button class="btn-primary" onclick="@revNxtFive">Back</button>
+<button class="btn-primary" onclick="@NxtFive">Next</button>
 @code {
+    void revNxtFive()
+    {
+        UriHelper6.NavigateTo("start_4");
+    }
 
+    void NxtFive()
+    {
+        UriHelper6.NavigateTo("continue_1");
+    }
 }
