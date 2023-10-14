@@ -1,7 +1,165 @@
 @page "/start_4"
-<PageTitle>Start - Main Credentials</PageTitle>
-<h1>Main Credentials</h1>
+@using Blazored.LocalStorage;
+@using Omnidroid_Start.Shared;
+@inject NavigationManager UriHelper5
+@inject ILocalStorageService _local
 
+<PageTitle>Start - Personally Identifiable Information</PageTitle>
+
+<h1>Personally Identifiable Information</h1>
+
+<p>Please complete the following form:</p>
+<EditForm Model="@Model2" OnValidSubmit="@SubmitModel2">
+<div>
+        <label>
+            Prefix:
+<InputText hide="itemViewFour" @bind-Value="Model2!.Terms1Prefix" placeholder="@iPrefix"/>
+        </label>
+    </div>
+    <div>
+        <label>
+            Gender Reference:
+            <InputText placeholder="@iGenRef" @bind-Value="Model2!.RefGender" />
+        </label>
+    </div>
+<div>
+        <label>
+            Last Name:
+            <InputText @bind-Value="Model2!.LastName"  placeholder="Last Name"/>
+        </label>
+    </div>
+<div>
+        <label>
+            Married Name:
+<InputText hide="itemViewThree" @bind-Value="Model2!.NotMaidenName" placeholder="@iNotMaidenName"/>
+        </label>
+    </div>
+    <div>
+        <label>
+            First Name:
+            <InputText @bind-Value="Model2!.FirstName" placeholder="First Name" />
+        </label>
+    </div>
+<div>
+        <label>
+            Middle Name(s):
+<InputText @bind-Value="Model2!.MiddleName" placeholder="Middle Name" />
+        </label>
+    </div>
+        <div>
+            <label>
+                Prefix:
+                <InputText hide="itemViewFour" @bind-Value="Model2!.Terms1Suffix" placeholder="@iSuffix"/>
+            </label>
+        </div>
+    <div>
+        <label>
+            Country:
+            <InputSelect @bind-Value="Model2!.RefCountry" />
+        </label>
+    </div>
+        <div>
+        <label>
+            E-Mail:
+<InputText @bind-Value="Model2!.EMail" placeholder="E-Mail" />
+        </label>
+    </div>
+    <div>
+        <label>
+            Phone:
+            <InputText @bind-Value="Model2!.Phone" placeholder="Phone Number" />
+        </label>
+    </div>
+    <div>
+        <label>
+            <InputCheckbox @bind-Value="Model2!.IfModuleMarried" placeholder="@iModuleMarried"/>
+            Is Married?
+        </label>
+    </div>
+    <div>
+        <label>
+            <InputCheckbox @bind-Value="Model2!.IfModuleTitledProfession" placeholder="@iModuleProfession" />
+            Has Profession-Related Titles.
+        </label>
+    </div>
+    <div>
+        <label>
+            <InputCheckbox @bind-Value="Model2!.IfModuleDescent" placeholder="@iModuleDescent" />
+            Has Descent-Related Titles.
+        </label>
+    </div>
+    <div>
+        <label>
+            Echelon Name:
+            <InputText hide="itemViewSix" @bind-Value="Model2!.EchelonName" placeholder="@iEchelonName" />
+        </label>
+    </div>
+    <p>@UpdateMessage1</p>
+<button type="submit">Save</button>
+</EditForm>
+
+<button class="btn-primary" onclick="@revNxtFour">Back</button>
+<button class="btn-primary" onclick="@NxtFour">Next</button>
 @code {
+    public bool? itemViewFour { get; set; }
+    public bool? itemViewFive { get; set; }
+    public bool? itemViewSix { get; set; }
 
+    public Universal? Model2 { get; set; }
+    public string? iPrefix { get; set; }
+    public string? iGenRef { get; set; }
+    public string? iLastName { get; set; }
+    public string? iNotMaidenName { get; set; }
+    public string? iSuffix { get; set; }
+    public string? iCountryID { get; set; }
+    public bool? iModuleMarried { get; set; }
+    public bool? iModuleDescent { get; set;}
+    public bool? iModuleTitledProfession { get; set; }
+    public string? iEchelonName { get; set; }
+
+    public string? UpdateMessage1 { get; set; }
+
+    // pre-sort itemView 
+
+    protected override void OnInitialized()
+    {
+        Model2 ??= new();
+        ReviewTwoIni();
+
+    }
+
+    void ReviewTwoIni()
+    {
+        itemViewFour = PreSort.VarB;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var iLastName = await _local.GetItemAsStringAsync("InputLastName_local");
+        var iModuleDescent = await _local.GetItemAsStringAsync("ifModuleDescent_local");
+        var iModuleTitledProfession = await _local.GetItemAsStringAsync("ifModuleTitledProfession_local");
+        var iModuleMarried = await _local.GetItemAsStringAsync("ifModuleMarried_local");
+        var iCountryID = await _local.GetItemAsStringAsync("SelectedCountryID_local");
+        var iNotMaidenName = await _local.GetItemAsStringAsync("NotMaidenName_local");
+        var iPrefix = await _local.GetItemAsStringAsync("InputTerms1Prefix_local");
+        var iSuffix = await _local.GetItemAsStringAsync("InputTerms1Suffix_local");
+        var iGenRef = await _local.GetItemAsStringAsync("SelectedGenderID_local");
+        var iModuleHost = await _local.GetItemAsStringAsync("ifModuleHost_local");
+        var iEchelonName = await _local.GetItemAsStringAsync("EchelonName_local");
+    }
+
+    public void SubmitModel2()
+    {
+        UpdateMessage1 = "Your information has been stored (locally).";
+    }
+
+    void revNxtFour()
+    {
+        UriHelper5.NavigateTo("start_3");
+    }
+
+    void NxtFour()
+    {
+        UriHelper5.NavigateTo("start_5");
+    }
 }
