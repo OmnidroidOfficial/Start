@@ -18,19 +18,20 @@
 <br />
 <p>@SelectedCountryID is the 3-letter abbreviation of the country matching your selection.</p>
 
-<button @onclick=@NxtOne>Next</button>
+<button class="btn-primary" @onclick=@RevNxtOne>Back</button>
+<button class="btn-primary" @onclick=@NxtOne>Next</button>
 
 @code {
 
     string? selectedCountryID;
 
-    string SelectedCountryID
+    public string SelectedCountryID
     {
         get => selectedCountryID ?? "";
         set { selectedCountryID = value; }
     }
 
-    List<Country> ListCountries = new List<Country>() { new Country("AFG", "Afghanistan"), new Country("ALB", "Albania") };
+    List<Country> ListCountries = new List<Country>() { new Country("AFG", "Afghanistan"), new Country("ALB", "Albania"), new Country("DZA", "Algeria"), new Country("ASM", "American Samoa"), new Country("AND","Andorra"), new Country("AGO", "Angola"), new Country("AIA", "Anguilla"), new Country("ATA", "Antartica"), new Country("ARG", "Argentina"), new Country("ARM", "Armenia"), new Country("ABW", "Aruba"), new Country("AUS", "Australia"), new Country("AUT", "Austria"), new Country("AZE", "Azerbaijan"), new Country("BHS", "The Bahamas"), new Country("BHR", "Bahrain"), new Country("BGD", "Bangladesh")};
 
     public class Country
     {
@@ -42,6 +43,11 @@
 
         public string IDLabel1 { get; set; }
         public string IDName1 { get; set; }
+    }
+
+    void RevNxtOne()
+    {
+        UriHelper2.NavigateTo("index");
     }
 
     void NxtOne()
